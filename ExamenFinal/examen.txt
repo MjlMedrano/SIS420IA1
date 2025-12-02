@@ -1,0 +1,21 @@
+Medrano Medrano Adrian Mijael:
+
+Modifica el código para que se considere un arco mas pequeño que el tamaño de la banda que defiende cada jugador
+
+se creo  variables para que el agente considere un arco falso 
+# ARCOS PEQUEÑOS AGENTE 
+AGENT_GOAL_WIDTH = 2
+AGENT_GOAL_CENTER = N_COLS // 2
+AGENT_GOAL_LEFT = AGENT_GOAL_CENTER - AGENT_GOAL_WIDTH//2
+AGENT_GOAL_RIGHT = AGENT_GOAL_LEFT + AGENT_GOAL_WIDTH - 1
+Tambien se descretizo en el entorno 
+class HockeyEnv:
+    def encode_for_j1(self, s):
+        ar1, ac1, ar2, ac2, pr, pc, pd = s
+        dr = np.clip(pr - ar1, -2, 2) # diferencia vertical limitada
+        dc = np.clip(pc - ac1, -2, 2) # diferencia horizontal limitada
+
+        d_goal = np.clip(pc - AGENT_GOAL_CENTER, -2, 2) # el agente cosidera la columa center para si esta cerca de 2 filas y columnas 
+        in_goal_range = int(AGENT_GOAL_LEFT <= pc <= AGENT_GOAL_RIGHT) #considera que el gol esta etre la columna 2 y 3 
+
+        return (int(dr), int(dc), int(pd), int(d_goal), in_goal_range)
